@@ -378,10 +378,10 @@ scheduler.add_jobs(jobs,minutes=1)
 参考 `example` 目录，再创建一个新目录就行
 
 比如说，如果要打 web2 这个题目，就建立一个 `web2` 目录，然后为了记录 webshell 信息，还要在 `models.py` 里面添加一个 model （继承 `WebshellModel` ，并且定义完了要 `Web2.register()` ）：
-awdframework
+
 
 ```python
-from myframework.django_job import WebshellModel
+from awdframework.django_job import WebshellModel
 
 class Example(WebshellModel):
     pass
