@@ -54,7 +54,7 @@ Quit the server with CTRL-BREAK.
 
 1. 定时任务。主要用于定时运行 exp，可以通过 web 后台可视化管理
 2. 批量运行 exp。对指定的 ip 列表，批量运行 exp、可以做到写 webshell、访问 webshell 等
-3. 记录 webshell 信息。用 mysql 数记录 webshell 信息，并实时更新，可以通过后台查看各个靶机对应的webshell 的具体信息、存活情况等
+3. 记录 webshell 信息。用 mysql 记录 webshell 信息，并实时更新，可以通过后台查看各个靶机对应的webshell 的具体信息、存活情况等
 5. webshell生成模块。开发了一个简单的webshell生成模块，可以方便生成普通一句话木马、不死马等
 
 ## Install：
