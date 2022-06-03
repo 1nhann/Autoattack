@@ -23,7 +23,7 @@
 	
 # Autoattack
 
-Autoattack ，一个追求可视化和少代码的 awd 批量攻击框架，采用 django + mysql 开发。
+Autoattack ，一个追求可视化和少操作的 awd 批量攻击框架，采用 django + mysql 开发。
 
 ```shell
     ___         __              __  __             __  
