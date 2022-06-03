@@ -249,6 +249,8 @@ scheduler.add_jobs(jobs,minutes=1)
 
 定义了一个 `Scheduler` ，用来做定时任务
 
+定时任务的开发参考：https://github.com/jcass77/django-apscheduler
+
 | methods in WebshellModel  | details                                           |
 | ------------------------- | ------------------------------------------------- |
 | eval                      | 通过ip对应的webshell,执行php代码                  |
