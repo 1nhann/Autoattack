@@ -41,5 +41,5 @@ class Exp(AwdTask):
         print(result)
 
 
-attacker = Attack(f"{dirname(__file__)}\..\..\ip.txt",Exp,port=27782,thread_num=5)
+attacker = Attack(f"{dirname(__file__)}/../../ip.txt",Exp,port=27782,thread_num=5)
 attacker.attack()
