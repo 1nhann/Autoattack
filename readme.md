@@ -18,7 +18,7 @@
         3. [`awdframework/webshell.py`](#)
         4. [`awdframework/encoder.py`](#)
     8. [如果是 pwn](#)
-    9. [多道题怎么写](#)
+    9. [多个场景怎么写](#)
     10. [参考资料](#)
 	
 # Autoattack
@@ -375,11 +375,11 @@ scheduler.add_jobs(jobs,minutes=1)
 
 
 
-## 多道题怎么写
+## 多个场景怎么写
 
 参考 `example` 目录，再创建一个新目录就行
 
-比如说，如果要打 web2 这个题目，就建立一个 `web2` 目录，然后为了记录 webshell 信息，还要在 `models.py` 里面添加一个 model （继承 `WebshellModel` ，并且定义完了要 `Web2.register()` ）：
+比如说，如果要打 web2，就建立一个 `web2` 目录，然后为了记录 webshell 信息，还要在 `models.py` 里面添加一个 model （继承 `WebshellModel` ，并且定义完了要 `Web2.register()` ）：
 
 
 ```python
