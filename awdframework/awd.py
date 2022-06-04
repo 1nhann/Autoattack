@@ -1,4 +1,5 @@
 import threading
+import socket
 
 class Task(threading.Thread):
     
@@ -36,6 +37,9 @@ class AwdTask(Task):
         try:
             while len(self.ips):
                 ip = self.ips.pop()
+                if not self.check_connect(ip):
+                    print("[+] {:<20} is not down , cannot connect".format(f"{ip}:{self.port}"))
+                    continue
                 if self.attack_use_webshell.__code__.co_code != b'd\x00S\x00':
                     self.attack_use_webshell(ip)
                 elif self.write_webshell.__code__.co_code != b'd\x00S\x00':
@@ -47,7 +51,14 @@ class AwdTask(Task):
         except:
             pass
 
-
+    def check_connect(self,ip):
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(1)
+        try:
+            sock.connect((ip, self.port))
+        except:
+            return False
+        return True
 
 class Attack:
     def __init__(self,ips_file,task_class=Task,port=80,thread_num=3,**args) -> None:
