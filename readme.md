@@ -59,7 +59,7 @@ Quit the server with CTRL-BREAK.
 
 ## Install：
 
-python 3.9+
+python3
 
 ```shell
 git clone https://github.com/1nhann/Autoattack.git
