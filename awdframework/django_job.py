@@ -17,16 +17,34 @@ class Scheduler(BackgroundScheduler):
             return super().add_job(func=func,trigger="interval",replace_existing=True,id=id,minutes=minutes)
         return super().add_job(func=func,trigger="interval",replace_existing=True,id=id,seconds=seconds)
 
-    def add_jobs(self,func_list:list,seconds=3, minutes=None):
+    def add_job_cron(self, func, id=None, month=None, day=None,hour=None,minute=None ,second=None):
+        return super().add_job(func=func,trigger="cron",replace_existing=True,id=id,month=month, day=day,hour=hour,minute=minute,second=second)
+
+    def remove_unwanted_jobs(self,func_list:list):
         ids_exsisted = [job.id for job in self.get_jobs()]
         ids = [func_id[1] for func_id in func_list]
         for id in ids_exsisted:
             if id not in ids:
                 self.remove_job(job_id=id)
+
+    def add_jobs(self,func_list:list,seconds=3, minutes=None):
+        self.remove_unwanted_jobs(func_list=func_list)
         for func_id in func_list:
             func = func_id[0]
             id = func_id[1]
             self.add_job(func=func,id=id,seconds=seconds,minutes=minutes)
+
+    def add_jobs_cron(self,func_list:list,month=None, day=None,hour=None,minute=None ,second=None):
+        self.remove_unwanted_jobs(func_list=func_list)
+        for func_id in func_list:
+            func = func_id[0]
+            id = func_id[1]
+            self.add_job_cron(func=func,id=id,month=month, day=day,hour=hour,minute=minute,second=second)
+    @classmethod
+    def init(cls):
+        scheduler = cls()
+        scheduler.start()
+        return scheduler
 
 class WebshellModel(models.Model):
     ip = models.CharField(max_length=0xff)

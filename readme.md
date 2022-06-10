@@ -190,12 +190,14 @@ jobs = [
 jobs += [
 
 ]
-scheduler.add_jobs(jobs,minutes=1)
+# scheduler.add_jobs(jobs,minutes=1)
+scheduler.add_jobs_cron(jobs,hour="10-12",minute="20,40")
 ```
 
 `(inhann.example.write_webshell.attacker.attack,"example.webshell"),` 表示把 `inhann.example.write_webshell.attacker.attack` 这个函数加入定时任务当中，id 是 `example.webshell`
 
-`minutes=1` 表示 `jobs` 里面的函数每 1 分钟执行一次
+如果使用 `add_jobs` 那么`minutes=1` 表示 `jobs` 里面的函数每 1 分钟执行一次
+如果使用 `add_jobs_cron` 那么 `hour="10-12",minute="20,40"` 表示 每天 10:20 10:40 11:20 11:40 12:20 12:40 运行 jobs 里面的内容
 
 
 

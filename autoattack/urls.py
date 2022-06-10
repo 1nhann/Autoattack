@@ -36,8 +36,7 @@ call_command('initadmin')
 
 # --------------------------------------------------------------------
 from awdframework.django_job import Scheduler
-scheduler = Scheduler()
-scheduler.start()
+scheduler = Scheduler.init()
 
 # import inhann.example.exp
 # import inhann.example.write_webshell
@@ -53,5 +52,6 @@ jobs = [
 jobs += [
 
 ]
-scheduler.add_jobs(jobs,minutes=1)
+# scheduler.add_jobs(jobs,minutes=1)
+scheduler.add_jobs_cron(jobs,hour="10-12",minute="20,40")
 
