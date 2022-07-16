@@ -175,8 +175,7 @@ ant.com
 
 ```python
 from awdframework.django_job import Scheduler
-scheduler = Scheduler()
-scheduler.start()
+scheduler = Scheduler.init()
 
 # import inhann.example.exp
 import inhann.example.write_webshell
