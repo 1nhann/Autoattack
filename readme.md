@@ -73,7 +73,7 @@ pip install -r requirements.txt
 
 > 使用 mysql而不是 sqlite ，是因为 sqlite 性能不够高，无法招架频繁的数据库操作
 
-1. 首先要在 mysql 中手动创建一个database ，名为 `autoattack` ，charset 使用 utf8
+1. 首先要在 mysql 中手动创建一个database ，名为 `autoattack` ，charset 使用 utf8 （或者直接用 docker-compose 起）
 
 2. 然后修改 `settings.py` ：
 
@@ -83,7 +83,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',  # 数据库引擎
         'NAME': 'autoattack',  # 数据库名，事先创建
         'USER': 'root',  # 数据库用户名
-        'PASSWORD': 'password',  # 密码
+        'PASSWORD': 'root',  # 密码
         'HOST': '127.0.0.1',  # mysql服务所在的主机ip
         'PORT': '3306',  # mysql服务端口
     }
