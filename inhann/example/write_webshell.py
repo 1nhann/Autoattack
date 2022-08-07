@@ -5,6 +5,9 @@ from ..models import Example
 from os.path import dirname,basename
 
 class Exp(AwdTask):
+    """
+    自定义一个Exp类，继承自AwdTask。覆写的 write_webshell()，批量写webshell
+    """
     def __init__(self, ips, port=80):
         super().__init__(ips, port)
 

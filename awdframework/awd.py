@@ -2,7 +2,9 @@ import threading
 import socket
 
 class Task(threading.Thread):
-    
+    """
+    Task 继承自 Thread，对ip列表对应的所有主机，运行同一个函数
+    """
     def __init__(self, ips:list, port=80):
         threading.Thread.__init__(self)
         self.ips = ips
@@ -24,6 +26,9 @@ class Task(threading.Thread):
 
 
 class AwdTask(Task):
+    """
+    继承自 Task ，用于 awd 的 Thread。支持 exp 、write webshell 、use webshell
+    """
     def __init__(self, ips: list, port=80):
         super().__init__(ips, port)
     
@@ -40,11 +45,11 @@ class AwdTask(Task):
                 if not self.check_connect(ip):
                     print("[+] {:<20} is not down , cannot connect".format(f"{ip}:{self.port}"))
                     continue
-                if self.attack_use_webshell.__code__.co_code != b'd\x00S\x00':
+                if self.attack_use_webshell.__code__.co_code != b'd\x00S\x00':#如果不是空
                     self.attack_use_webshell(ip)
-                elif self.write_webshell.__code__.co_code != b'd\x00S\x00':
+                elif self.write_webshell.__code__.co_code != b'd\x00S\x00':#如果不是空
                     self.write_webshell(ip)
-                elif self.exp.__code__.co_code != b'd\x01S\x00':
+                elif self.exp.__code__.co_code != b'd\x01S\x00':#如果不是空
                     self.exp(ip)
                 else:
                     print("[+]You must override `exp()` or `write_webshell()` or `attack_use_webshell()`")
@@ -52,6 +57,9 @@ class AwdTask(Task):
             pass
 
     def check_connect(self,ip):
+        """
+        用 socket 检查是否能访问
+        """
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.settimeout(1)
         try:
@@ -61,6 +69,9 @@ class AwdTask(Task):
         return True
 
 class Attack:
+    """
+    用于攻击的线程管理器
+    """
     def __init__(self,ips_file,task_class=Task,port=80,thread_num=3,**args) -> None:
         with open(ips_file) as f:
             self.ips = f.read().split("\n")

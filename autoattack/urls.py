@@ -30,12 +30,14 @@ print(base64_decode(s))
 # --------------------------------------------------------------------
 from django.core.management import call_command
 
+#自动完成数据库的构建、admin用户的创建
 call_command('makemigrations')
 call_command('migrate')
 call_command('initadmin')
 
 # --------------------------------------------------------------------
 from awdframework.django_job import Scheduler
+#打开定时任务管理器
 scheduler = Scheduler.init()
 
 # import inhann.example.exp
@@ -43,6 +45,7 @@ scheduler = Scheduler.init()
 # import inhann.example.get_flag
 # import inhann.example.pwn
 
+# jobs 当中放的是一个个 tuple，表示要定时运行的函数和对应的 id
 jobs = [
     # (inhann.example.exp.attacker.attack,"example.exp"),
     # (inhann.example.write_webshell.attacker.attack,"example.webshell"),

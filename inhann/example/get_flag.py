@@ -2,6 +2,9 @@ from awdframework.awd import Attack,AwdTask
 from ..models import Example
 from os.path import dirname
 class Exp(AwdTask):
+    """
+    自定义一个Exp类，继承自AwdTask。覆写 attack_use_webshell()，主要于webshell种下之后的后渗透
+    """
     def __init__(self, ips, port=80):
         super().__init__(ips, port)
 

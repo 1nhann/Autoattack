@@ -131,6 +131,7 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# admin的账号、密码、邮箱
 ADMIN_USERNAME = "admin"
 ADMIN_EMAIL = "root@inhann.top"
 ADMIN_PASSWORD = "admin"

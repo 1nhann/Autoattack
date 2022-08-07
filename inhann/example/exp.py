@@ -3,6 +3,9 @@ import requests
 from os.path import dirname
 
 class Exp(AwdTask):
+    """
+    自定义一个Exp类，继承自AwdTask。覆写的 exp() 会被运行在每个 ip 上
+    """
     def __init__(self, ips, port=80):
         super().__init__(ips, port)
 

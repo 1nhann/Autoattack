@@ -7,20 +7,32 @@ import requests
 from .webshell import Webshell
 
 class Scheduler(BackgroundScheduler):
+    """
+    定时任务管理器
+    """
     def __init__(self):
         super().__init__(timezone=settings.TIME_ZONE)
         self.add_jobstore(DjangoJobStore(), "default")
         register_events(self)
 
     def add_job(self, func, id=None, seconds=3, minutes=None):
+        """
+        增加 job，可以指定 job 运行的间隔
+        """
         if minutes:
             return super().add_job(func=func,trigger="interval",replace_existing=True,id=id,minutes=minutes)
         return super().add_job(func=func,trigger="interval",replace_existing=True,id=id,seconds=seconds)
 
     def add_job_cron(self, func, id=None, month=None, day=None,hour=None,minute=None ,second=None):
+        """
+        增加 job，可以指定 job 运行的具体时间
+        """
         return super().add_job(func=func,trigger="cron",replace_existing=True,id=id,month=month, day=day,hour=hour,minute=minute,second=second)
 
     def remove_unwanted_jobs(self,func_list:list):
+        """
+        删除不想要的 job
+        """
         ids_exsisted = [job.id for job in self.get_jobs()]
         ids = [func_id[1] for func_id in func_list]
         for id in ids_exsisted:
@@ -28,6 +40,9 @@ class Scheduler(BackgroundScheduler):
                 self.remove_job(job_id=id)
 
     def add_jobs(self,func_list:list,seconds=3, minutes=None):
+        """
+        批量添加 job
+        """
         self.remove_unwanted_jobs(func_list=func_list)
         for func_id in func_list:
             func = func_id[0]
@@ -35,6 +50,9 @@ class Scheduler(BackgroundScheduler):
             self.add_job(func=func,id=id,seconds=seconds,minutes=minutes)
 
     def add_jobs_cron(self,func_list:list,month=None, day=None,hour=None,minute=None ,second=None):
+        """
+        批量添加 job
+        """
         self.remove_unwanted_jobs(func_list=func_list)
         for func_id in func_list:
             func = func_id[0]
@@ -42,11 +60,17 @@ class Scheduler(BackgroundScheduler):
             self.add_job_cron(func=func,id=id,month=month, day=day,hour=hour,minute=minute,second=second)
     @classmethod
     def init(cls):
+        """
+        启动管理器
+        """
         scheduler = cls()
         scheduler.start()
         return scheduler
 
 class WebshellModel(models.Model):
+    """
+    抽象Model，用来表示webshell的相关数据
+    """
     ip = models.CharField(max_length=0xff)
     webshell_url = models.CharField(max_length=0xff)
     webshell_key = models.CharField(max_length=0xff)
