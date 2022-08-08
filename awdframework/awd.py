@@ -1,41 +1,58 @@
 import threading
 import socket
+from time import sleep
+
 
 class Task(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+
+    def run(self):
+        pass
+
+
+class Attack():
+    def __init__(self, task_class, thread_num):
+        self.task_class = task_class
+        self.thread_num = thread_num
+
+    def attack(self):
+        tasks = []
+        for i in range(self.thread_num):
+            t = self.task_class()
+            tasks.append(t)
+            t.setDaemon(True)
+            t.start()
+        try:
+            while len(tasks):
+                sleep(10)
+                for t in tasks:
+                    if not t.is_alive():
+                        tasks.remove(t)
+
+        except KeyboardInterrupt:
+            exit("User Quit")
+
+
+class AwdTask(threading.Thread):
     """
-    Task 继承自 Thread，对ip列表对应的所有主机，运行同一个函数
+    继承自 Task ，用于 awd 的 Thread。支持 exp 、write webshell 、use webshell
     """
-    def __init__(self, ips:list, port=80):
+    def __init__(self, ips: list, port=80):
         threading.Thread.__init__(self)
         self.ips = ips
         self.port = port
 
-    def exp(self,ip):
+    def exp(self, ip):
         """
         You should override `exp()`
         """
         pass
 
-    def run(self):
-        try:
-            while len(self.ips):
-                ip = self.ips.pop()
-                self.exp(ip)
-        except:
-            pass
-
-
-class AwdTask(Task):
-    """
-    继承自 Task ，用于 awd 的 Thread。支持 exp 、write webshell 、use webshell
-    """
-    def __init__(self, ips: list, port=80):
-        super().__init__(ips, port)
-    
-    def write_webshell(self,ip):
+    def write_webshell(self, ip):
         pass
-    
-    def attack_use_webshell(self,ip):
+
+    def attack_use_webshell(self, ip):
         pass
 
     def run(self):
@@ -56,7 +73,7 @@ class AwdTask(Task):
         except:
             pass
 
-    def check_connect(self,ip):
+    def check_connect(self, ip):
         """
         用 socket 检查是否能访问
         """
@@ -68,13 +85,13 @@ class AwdTask(Task):
             return False
         return True
 
-class Attack:
+
+class AwdAttack(Attack):
     """
     用于攻击的线程管理器
     """
-    def __init__(self,ips_file,task_class=Task,port=80,thread_num=3,**args) -> None:
-        with open(ips_file) as f:
-            self.ips = f.read().split("\n")
+    def __init__(self, ips, task_class=AwdTask, port=80, thread_num=3, **args) -> None:
+        self.ips = [ip.strip() for ip in ips]
         self.port = port
         self.thread_num = thread_num
         self.task_class = task_class
@@ -83,7 +100,7 @@ class Attack:
         tasks = []
         ips = self.ips.copy()
         for i in range(self.thread_num):
-            t = self.task_class(ips=ips,port=self.port)
+            t = self.task_class(ips=ips, port=self.port)
             tasks.append(t)
             t.setDaemon(True)
             t.start()
