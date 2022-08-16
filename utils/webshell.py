@@ -18,12 +18,12 @@ class Webshell:
         self.location = location
         command = ""
         if nodie:
-            with open(f"{self.dir}/webshell/write_nodie_webshell.sh") as f:
+            with open(f"{self.dir}/webshell/write_nodie_webshell.sh.txt") as f:
                 write_webshell_sh = f.read()
             command = write_webshell_sh.replace("8888",encoder.base64_encode(php))
             command = command.replace("9999",location)
         else:
-            with open(f"{self.dir}/webshell/write_webshell.sh") as f:
+            with open(f"{self.dir}/webshell/write_webshell.sh.txt") as f:
                 write_webshell_sh = f.read()
             command = write_webshell_sh.replace("8888",encoder.base64_encode(php))
             command = command.replace("9999",location)
@@ -56,7 +56,7 @@ class PHP(Webshell):
         """
         self.passwd = passwd
         raw = self.rawcode(php)
-        with open(f"{self.dir}/webshell/passwd.php") as f:
+        with open(f"{self.dir}/webshell/passwd.php.txt") as f:
             passwd_php = f.read()
         code = passwd_php.replace("8888",encoder.md5(bytes(passwd,"utf-8")))
         code = code.replace("9999",raw)
@@ -66,7 +66,7 @@ class PHP(Webshell):
         """
         返回webshell内容，默认是一句话木马，可以指定password
         """
-        with open(f"{self.dir}/webshell/eval.php") as f:
+        with open(f"{self.dir}/webshell/eval.php.txt") as f:
             eval_php = f.read()
         code = eval_php.replace("9999","'" + self.key + "'")
         if passwd:
@@ -78,7 +78,7 @@ class PHP(Webshell):
         返回 webshell 内容，不死马
         """
         self.location = location
-        with open(f"{self.dir}/webshell/nodie.php") as f:
+        with open(f"{self.dir}/webshell/nodie.php.txt") as f:
             nodie_php = f.read()
         code = nodie_php.replace("8888",encoder.base64_encode(php))
         code = code.replace("9999",location)
@@ -89,7 +89,7 @@ class PHP(Webshell):
         返回 webshell 内容，将 webshell 塞入大文件中
         """
         raw = self.rawcode(php)
-        with open(f"{self.dir}/webshell/fatter.php") as f:
+        with open(f"{self.dir}/webshell/fatter.php.txt") as f:
             fatter_php = f.read()
         code = fatter_php.replace("9999",raw)
         return code
@@ -98,7 +98,7 @@ class PHP(Webshell):
         返回 php 代码，用来写 webshell
         """
         self.location = location
-        with open(f"{self.dir}/webshell/file_put_contents.php") as f:
+        with open(f"{self.dir}/webshell/file_put_contents.php.txt") as f:
             file_put_contents_php = f.read()
         code = file_put_contents_php.replace("8888",encoder.base64_encode(php))
         code = code.replace("9999",location)
