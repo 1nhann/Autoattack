@@ -1,13 +1,12 @@
 from awdframework.awd import AwdAttack,AwdTask
+from awdframework.readwrite import readlines
 from os.path import dirname
 import pwn
 
 class Exp(AwdTask):
-    def __init__(self, ips, port=80):
-        super().__init__(ips, port)
 
-    def exp(self, ip):
-        sh = pwn.remote(ip, self.port)
+    def exp(self, ip,port):
+        sh = pwn.remote(ip, port)
         pwn.context.arch = "i386"
         # 本来是 interactive，现在直接执行命令
         # sh.interactive()
@@ -15,8 +14,6 @@ class Exp(AwdTask):
         result = sh.recv()
         print(result)
 
-ips = []
-with open(f"{dirname(__file__)}/../../ip.txt") as f:
-    ips = f.read().split("\n")
-attacker = AwdAttack(ips=ips,task_class=Exp,port=80,thread_num=5)
-attacker.attack()
+hosts = readlines(f"{dirname(__file__)}/../../ip.txt")
+attacker = AwdAttack(hosts=hosts,task_class=Exp,port=80,thread_num=5)
+# attacker.attack()
