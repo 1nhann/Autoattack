@@ -1,22 +1,8 @@
-"""config URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/3.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path
-
-
+urlpatterns = [
+    path('', admin.site.urls),
+]
 #--------------------------------------------------------------------
 # banner
 from utils.encoder import base64_decode
@@ -32,15 +18,9 @@ call_command('migrate')
 call_command('initadmin')
 
 # --------------------------------------------------------------------
-
-urlpatterns = [
-    path('', admin.site.urls),
-]
-
-# --------------------------------------------------------------------
+# jobs 打开定时任务管理器
 
 from utils.django_job import Scheduler
-#打开定时任务管理器
 scheduler = Scheduler.init()
 
 import autoattack.example.exp
@@ -53,11 +33,13 @@ jobs = [
     (autoattack.example.exp.attacker.attack, "example.exp"),
     # (autoattack.example.write_webshell.attacker.attack,"example.webshell"),
     # (autoattack.example.get_flag.attacker.attack,"example.getflag"),
-    # (autoattack.example.pwn.attacker.attack,"pwn1.exp"),
+    # (autoattack.example.pwn.attacker.attack,"example.exp"),
 ]
 jobs += [
 
 ]
-# scheduler.add_jobs(jobs,seconds=5)
-scheduler.add_jobs_cron(jobs,hour="10-12",minute="20,40")
+scheduler.add_jobs(jobs,seconds=5) #每5秒执行一次
+# scheduler.add_jobs_cron(jobs,hour="10-12",minute="20,40") #每天 10:20 10:40 11:20 11:40 12:20 12:40 执行一次
+
+
 

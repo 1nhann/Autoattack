@@ -51,7 +51,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'autoattack.urls'
+ROOT_URLCONF = 'autoattack.jobs'
 
 TEMPLATES = [
     {
@@ -72,20 +72,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',  # 数据库引擎
-        'NAME': 'autoattack',  # 数据库名，事先创建
-        'USER': 'root',  # 用户名
-        'PASSWORD': 'root',  # 密码
-        'HOST': '127.0.0.1',  # mysql服务所在的主机ip
-        'PORT': '3306',  # mysql服务端口
-    }
-}
 
 
 # Password validation
@@ -130,6 +116,24 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+
+
+# Database
+# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',  # 数据库引擎
+        'NAME': 'autoattack',  # 数据库名，事先创建
+        'USER': 'root',  # 用户名
+        'PASSWORD': 'root',  # 密码
+        'HOST': '127.0.0.1',  # mysql服务所在的主机ip
+        'PORT': '3306',  # mysql服务端口
+    }
+}
 
 # admin的账号、密码、邮箱
 ADMIN_USERNAME = "admin"

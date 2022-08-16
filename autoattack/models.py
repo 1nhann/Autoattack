@@ -6,4 +6,3 @@ class Example(WebshellModel):
     """
     pass
 Example.register()
-
