@@ -1,5 +1,5 @@
-from awdframework.awd import AwdAttack,AwdTask
-from awdframework.readwrite import readlines
+from utils.awd import AwdAttack,AwdTask
+from utils.readwrite import readlines
 import requests
 from os.path import dirname
 

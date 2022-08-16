@@ -1,4 +1,4 @@
-from awdframework.django_job import WebshellModel
+from utils.django_job import WebshellModel
 
 class Example(WebshellModel):
     """

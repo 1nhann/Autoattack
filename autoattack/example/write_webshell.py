@@ -1,6 +1,6 @@
-from awdframework.awd import AwdAttack,AwdTask
-from awdframework.readwrite import readlines
-from awdframework.webshell import PHP
+from utils.awd import AwdAttack,AwdTask
+from utils.readwrite import readlines
+from utils.webshell import PHP
 import requests
 from ..models import Example
 from os.path import dirname,basename

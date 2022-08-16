@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "django_apscheduler",
-    'inhann',
+    'autoattack',
 ]
 
 MIDDLEWARE = [
@@ -70,7 +70,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'autoattack.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # Database
@@ -133,5 +133,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # admin的账号、密码、邮箱
 ADMIN_USERNAME = "admin"
-ADMIN_EMAIL = "root@inhann.top"
+ADMIN_EMAIL = "root@autoattack.top"
 ADMIN_PASSWORD = "admin"
