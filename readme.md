@@ -105,7 +105,7 @@ ADMIN_PASSWORD = "admin"
 为了能外网访问，需要在 `config/settings.py` 配置 ALLOWED_HOSTS ：
 
 ```python
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["inhann.top"]
 ```
 
 ```shell
