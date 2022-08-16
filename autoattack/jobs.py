@@ -38,8 +38,8 @@ jobs = [
 jobs += [
 
 ]
-# scheduler.add_jobs(jobs,seconds=5) #每5秒执行一次
-scheduler.add_jobs_cron(jobs,hour="10-12",minute="20,40") #每天 10:20 10:40 11:20 11:40 12:20 12:40 执行一次
+scheduler.add_jobs(jobs,seconds=5) #每5秒执行一次
+# scheduler.add_jobs_cron(jobs,hour="10-12",minute="20,40") #每天 10:20 10:40 11:20 11:40 12:20 12:40 执行一次
 
 
 
