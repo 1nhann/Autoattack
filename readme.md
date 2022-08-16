@@ -102,6 +102,12 @@ ADMIN_PASSWORD = "admin"
 
 ## 运行
 
+为了能外网访问，需要在 `config/settings.py` 配置 ALLOWED_HOSTS ：
+
+```python
+ALLOWED_HOSTS = []
+```
+
 ```shell
 python manage.py runserver 0.0.0.0:8000
 ```
