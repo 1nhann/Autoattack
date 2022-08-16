@@ -103,7 +103,7 @@ ADMIN_PASSWORD = "admin"
 ## 运行
 
 ```shell
-python manage.py runserver
+python manage.py runserver 0.0.0.0:8000
 ```
 
 ## Usage
