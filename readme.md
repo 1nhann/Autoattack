@@ -79,7 +79,7 @@ pip install -r requirements.txt
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',  # 数据库引擎
-        'NAME': 'config',  # 数据库名，事先创建
+        'NAME': 'autoattack',  # 数据库名，事先创建
         'USER': 'root',  # 数据库用户名
         'PASSWORD': 'root',  # 密码
         'HOST': '127.0.0.1',  # mysql服务所在的主机ip
