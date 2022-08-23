@@ -68,6 +68,7 @@ git clone https://github.com/1nhann/Autoattack.git
 ```shell
 pip install -r requirements.txt
 ```
+ps:如果安装mysqlclient报错，可以参考 https://pypi.org/project/mysqlclient/ 解决
 
 ## 配置数据库：
 
