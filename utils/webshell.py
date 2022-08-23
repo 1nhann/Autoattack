@@ -1,4 +1,4 @@
-import myframework.encoder as encoder
+import utils.encoder as encoder
 from os.path import dirname
 import random
 from string import ascii_letters,digits
