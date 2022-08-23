@@ -204,7 +204,7 @@ scheduler.add_jobs(jobs,seconds=5) #每5秒执行一次
 
 
 
-可以图形化管理要定时运行的任务（删除 job 这个选项暂时没用，对于想要删除的 job ，直接在 `urls.py` 的 `jobs` 中注释掉就行）：
+可以图形化管理要定时运行的任务（删除 job 这个选项暂时没用，对于想要删除的 job ，直接在 `jobs.py` 的 `jobs` 中注释掉就行）：
 
 ![image-20220603000922360](https://raw.githubusercontent.com/1nhann/hub/master/data/blog/2022/06/image-20220603000922360.png)
 
