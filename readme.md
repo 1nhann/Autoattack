@@ -286,7 +286,7 @@ pwn 的话不用写 webshell ，因此只需要参考 `直接攻击，获取 fla
 
 比如：
 
-`inhann/example/pwn.py` ：
+`autoattack/example/pwn.py` ：
 
 ```python
 from utils.awd import AwdAttack,AwdTask
